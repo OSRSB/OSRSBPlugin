@@ -81,23 +81,6 @@ static def compareSemanticVersion(String s1, String s2) {
     return s1 == null && s2 != null
 }
 
-dependencies {
-    implementation group: 'net.runelite', name: 'client', version: runeLiteVersion
-    implementation group: 'net.runelite', name: 'cache', version: runeLiteVersion
-    implementation 'org.projectlombok:lombok:1.18.22'
-    annotationProcessor 'org.projectlombok:lombok:1.18.22'
-
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.slf4j:slf4j-simple:1.7.36'
-    testImplementation group: 'net.runelite', name: 'client', version: runeLiteVersion, {
-        exclude group: 'ch.qos.logback', module: 'logback-classic'
-    }
-
-    implementation 'com.github.OSRSB:OsrsBot:master-SNAPSHOT'
-    implementation group: 'javassist', name: 'javassist', version: '3.12.1.GA'
-    implementation group: 'net.sf.jopt-simple', name:'jopt-simple', version: '5.0.4'
-}
-
 sourceSets {
     main {
         java {
@@ -109,38 +92,39 @@ sourceSets {
     }
 }
 
+dependencies {
+    compileOnly group: 'net.runelite', name: 'client', version: runeLiteVersion
+    compileOnly group: 'net.runelite', name: 'cache', version: runeLiteVersion
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    compileOnly 'com.github.OSRSB:OSRSBot:master-SNAPSHOT'
+}
 
+jar {
+    exclude 'META-INF/*.RSA'
+    exclude 'META-INF/*.SF'
+    exclude 'META-INF/*.DSA'
 
-task localJar(type: JavaCompile) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    destinationDirectory.set(file("$rootDir"))
+}
+
+task shadedJar(type: JavaCompile) {
+    project.configurations.runtimeOnly.setCanBeResolved(true)
     jar {
-        manifest {
-            attributes(
-                    'Class-Path': configurations.runtimeClasspath.collect { it.getName() }.join(' '),
-                    'Main-Class': 'net.runelite.rsb.botLauncher.Application'
-            )
-
-        }
         from{
-            configurations.runtimeClasspath.collect {it.isDirectory() ? it: zipTree(it)}
+            configurations.compileClasspath.collect {it.isDirectory() ? it: zipTree(it)}
         }
-
-
-        exclude 'META-INF/*.RSA'
-        exclude 'META-INF/*.SF'
-        exclude 'META-INF/*.DSA'
-
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
-        destinationDirectory.set(file("$rootDir"))
     }
+    dependsOn jar
 }
 
 task launchClientWithScript(type: JavaExec) {
-    dependsOn localJar
     group = "Execution"
     description = "Runs the main method within RSB"
-    classpath = sourceSets.main.runtimeClasspath
+    classpath = sourceSets.main.compileClasspath + sourceSets.main.runtimeClasspath
     getMainClass() set "net.runelite.rsb.botLauncher.Application"
     jvmArgs "-debug".split(" ")
     args "--bot-runelite --developer-mode".split(" ")
+    dependsOn shadedJar
 }
