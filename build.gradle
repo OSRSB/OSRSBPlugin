@@ -40,7 +40,7 @@ static def getRuneLiteVersion() {
             String removeName = inputLine.substring(inputLine.indexOf("</a>") + 4)
             if (!name.contains("SNAPSHOT") && removeName != "") {
                 if (compareSemanticVersion(latestName, name)) {
-                    latestName = name;
+                    latestName = name
                 }
             }
         }
@@ -112,6 +112,9 @@ jar {
 task shadedJar(type: JavaCompile) {
     project.configurations.runtimeOnly.setCanBeResolved(true)
     jar {
+        manifest {
+            attributes('Main-Class': 'net.runelite.rsb.botLauncher.Application')
+        }
         from{
             configurations.compileClasspath.collect {it.isDirectory() ? it: zipTree(it)}
         }
