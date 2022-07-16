@@ -1,2 +1,0 @@
-include ":TestRSB"
-project(":TestRSB").projectDir = file("../TestRSB")

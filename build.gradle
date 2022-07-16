@@ -1,13 +1,27 @@
 plugins {
     id 'java'
+    id 'maven-publish'
 }
+
+group = 'com.github.OSRSB'
 
 repositories {
     mavenLocal()
     maven {
-        url = 'https://repo.runelite.net'
+        url "https://repo.runelite.net"
+    }
+    maven {
+        url "https://jitpack.io"
     }
     mavenCentral()
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
 }
 
 def runeLiteVersion = getRuneLiteVersion()
@@ -79,7 +93,7 @@ dependencies {
         exclude group: 'ch.qos.logback', module: 'logback-classic'
     }
 
-    implementation project(":TestRSB")
+    implementation 'com.github.OSRSB:OsrsBot:master-SNAPSHOT'
     implementation group: 'javassist', name: 'javassist', version: '3.12.1.GA'
     implementation group: 'net.sf.jopt-simple', name:'jopt-simple', version: '5.0.4'
 }
@@ -95,29 +109,34 @@ sourceSets {
     }
 }
 
-jar {
-    manifest {
-        attributes(
-                'Class-Path': configurations.runtimeClasspath.collect { it.getName() }.join(' '),
-                'Main-Class': 'net.runelite.rsb.botLauncher.Application'
-        )
 
+
+task localJar(type: JavaCompile) {
+    jar {
+        manifest {
+            attributes(
+                    'Class-Path': configurations.runtimeClasspath.collect { it.getName() }.join(' '),
+                    'Main-Class': 'net.runelite.rsb.botLauncher.Application'
+            )
+
+        }
+        from{
+            configurations.runtimeClasspath.collect {it.isDirectory() ? it: zipTree(it)}
+        }
+
+
+        exclude 'META-INF/*.RSA'
+        exclude 'META-INF/*.SF'
+        exclude 'META-INF/*.DSA'
+
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+        destinationDirectory.set(file("$rootDir"))
     }
-    from{
-        configurations.runtimeClasspath.collect {it.isDirectory() ? it: zipTree(it)}
-    }
-
-
-    exclude 'META-INF/*.RSA'
-    exclude 'META-INF/*.SF'
-    exclude 'META-INF/*.DSA'
-
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
-    destinationDirectory.set(file("$rootDir"))
 }
 
 task launchClientWithScript(type: JavaExec) {
+    dependsOn localJar
     group = "Execution"
     description = "Runs the main method within RSB"
     classpath = sourceSets.main.runtimeClasspath
