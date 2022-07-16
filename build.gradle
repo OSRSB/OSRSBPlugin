@@ -131,3 +131,13 @@ task launchClientWithScript(type: JavaExec) {
     args "--bot-runelite --developer-mode".split(" ")
     dependsOn shadedJar
 }
+
+task launchClientMac(type: JavaExec) {
+    group = "Execution"
+    description = "Runs the main method within RSB"
+    classpath = sourceSets.main.compileClasspath + sourceSets.main.runtimeClasspath
+    getMainClass() set "net.runelite.rsb.botLauncher.Application"
+    jvmArgs "-debug --add-opens=java.desktop/com.apple.eawt=ALL-UNNAMED --add-opens=java.desktop/sun.awt=ALL-UNNAMED".split(" ")
+    args "--bot-runelite --developer-mode".split(" ")
+    dependsOn shadedJar
+}
