@@ -1,6 +1,5 @@
 package net.runelite.client.plugins.bot;
 
-import com.google.inject.Injector;
 import com.google.inject.Provides;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.config.ConfigManager;
@@ -24,9 +23,9 @@ import java.io.InputStream;
 )
 @Slf4j
 public class BotPlugin extends Plugin {
-    public BotPlugin(Injector injector) {
-        super.injector = injector;
-    }
+
+    @Inject
+    private BotConfig config;
 
     @Inject
     private ClientToolbar clientToolbar;
@@ -100,8 +99,5 @@ public class BotPlugin extends Plugin {
         BotPlugin.accountPanel = accountPanel;
     }
 
-    public void setInjector(Injector injector) {
-        super.injector = injector;
-    }
 
 }
