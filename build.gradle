@@ -113,7 +113,10 @@ task shadedJar(type: JavaCompile) {
     project.configurations.runtimeOnly.setCanBeResolved(true)
     jar {
         manifest {
-            attributes('Main-Class': 'net.runelite.rsb.botLauncher.Application')
+            attributes(
+                    'Class-Path': sourceSets.main.compileClasspath + sourceSets.main.runtimeClasspath,
+                    'Main-Class': 'net.runelite.rsb.botLauncher.Application'
+            )
         }
         from{
             configurations.compileClasspath.collect {it.isDirectory() ? it: zipTree(it)}
