@@ -32,7 +32,7 @@ jobs:
           distribution: temurin
       - name: Make gradlew executable
         run: chmod +x ./gradlew
-      - name: Run build with Gradle Wrapper
+      - name: Run shadedJar with Gradle Wrapper
         uses: gradle/gradle-build-action@v2
         with:
           arguments: --no-daemon clean shadedJar
