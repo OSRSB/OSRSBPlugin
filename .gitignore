@@ -1,0 +1,6 @@
+# Folders
+.gradle/
+build/
+.idea/
+# Files
+OSRSBPlugin.jar
