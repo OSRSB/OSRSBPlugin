@@ -35,7 +35,7 @@ jobs:
       - name: Run shadedJar with Gradle Wrapper
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: --no-daemon clean shadedJar
+          arguments: --no-daemon clean jar
       - name: Artifact jar
         uses: actions/upload-artifact@v2
         with:
