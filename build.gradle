@@ -114,7 +114,6 @@ task shadedJar(type: JavaCompile) {
     jar {
         manifest {
             attributes(
-                    'Class-Path': sourceSets.main.compileClasspath + sourceSets.main.runtimeClasspath,
                     'Main-Class': 'net.runelite.rsb.botLauncher.Application'
             )
         }
