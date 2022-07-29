@@ -105,23 +105,6 @@ jar {
     exclude 'META-INF/*.DSA'
 
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
-    destinationDirectory.set(file("$rootDir"))
-}
-
-task shadedJar(type: JavaCompile) {
-    project.configurations.runtimeOnly.setCanBeResolved(true)
-    jar {
-        manifest {
-            attributes(
-                    'Main-Class': 'net.runelite.rsb.botLauncher.Application'
-            )
-        }
-        from{
-            configurations.compileClasspath.collect {it.isDirectory() ? it: zipTree(it)}
-        }
-    }
-    dependsOn jar
 }
 
 task launchClientWithScript(type: JavaExec) {
@@ -131,8 +114,8 @@ task launchClientWithScript(type: JavaExec) {
     getMainClass() set "net.runelite.rsb.botLauncher.Application"
     jvmArgs "-debug".split(" ")
     args "--bot-runelite --developer-mode".split(" ")
-    dependsOn shadedJar
 }
+
 
 task launchClientMac(type: JavaExec) {
     group = "Execution"
@@ -141,5 +124,4 @@ task launchClientMac(type: JavaExec) {
     getMainClass() set "net.runelite.rsb.botLauncher.Application"
     jvmArgs "-debug --add-opens=java.desktop/com.apple.eawt=ALL-UNNAMED --add-opens=java.desktop/sun.awt=ALL-UNNAMED".split(" ")
     args "--bot-runelite --developer-mode".split(" ")
-    dependsOn shadedJar
 }
