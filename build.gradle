@@ -40,7 +40,7 @@ static def getRuneLiteVersion() {
             String removeName = inputLine.substring(inputLine.indexOf("</a>") + 4)
             if (!name.contains("SNAPSHOT") && removeName != "") {
                 if (compareSemanticVersion(latestName, name)) {
-                    latestName = name
+                    latestName = name;
                 }
             }
         }
@@ -95,8 +95,8 @@ sourceSets {
 dependencies {
     compileOnly group: 'net.runelite', name: 'client', version: runeLiteVersion
     compileOnly group: 'net.runelite', name: 'cache', version: runeLiteVersion
-    annotationProcessor 'org.projectlombok:lombok:1.18.22'
-    compileOnly 'com.github.OSRSB:OSRSBot:master-SNAPSHOT'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    compileClasspath 'com.github.OSRSB:OSRSBot:master-SNAPSHOT'
 }
 
 jar {
@@ -107,21 +107,31 @@ jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
+enum OperatingSystem {
+    MAC, WINDOWS, LINUX, UNKNOWN
+
+    static def getOperatingSystem() {
+        final String os = System.getProperty("os.name")
+        if (os.contains("Mac")) {
+            return MAC
+        } else if (os.contains("Windows")) {
+            return WINDOWS
+        } else if (os.contains("Linux")) {
+            return LINUX
+        } else {
+            return UNKNOWN
+        }
+    }
+}
+
 task launchClientWithScript(type: JavaExec) {
     group = "Execution"
     description = "Runs the main method within RSB"
     classpath = sourceSets.main.compileClasspath + sourceSets.main.runtimeClasspath
     getMainClass() set "net.runelite.rsb.botLauncher.Application"
-    jvmArgs "-debug".split(" ")
-    args "--bot-runelite --developer-mode".split(" ")
-}
-
-
-task launchClientMac(type: JavaExec) {
-    group = "Execution"
-    description = "Runs the main method within RSB"
-    classpath = sourceSets.main.compileClasspath + sourceSets.main.runtimeClasspath
-    getMainClass() set "net.runelite.rsb.botLauncher.Application"
-    jvmArgs "-debug --add-opens=java.desktop/com.apple.eawt=ALL-UNNAMED --add-opens=java.desktop/sun.awt=ALL-UNNAMED".split(" ")
+    String jvmArgString = (OperatingSystem.MAC == OperatingSystem.getOperatingSystem()) ?
+            "-debug --add-opens=java.desktop/com.apple.eawt=ALL-UNNAMED --add-opens=java.desktop/sun.awt=ALL-UNNAMED" :
+            "-debug"
+    jvmArgs jvmArgString.split(" ")
     args "--bot-runelite --developer-mode".split(" ")
 }
