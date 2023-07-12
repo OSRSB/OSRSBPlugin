@@ -1,5 +1,6 @@
 package net.runelite.client.plugins.bot.base;
 
+import net.runelite.client.plugins.bot.BotConfig;
 import net.runelite.rsb.botLauncher.BotLite;
 
 import javax.swing.*;
@@ -37,6 +38,32 @@ public class DebugPanel extends JPanel {
         drawSettings.addActionListener(e -> bot.getScriptHandler().getDebugSettingsListener().setDrawSettings(drawSettings.isSelected()));
         drawWeb.addActionListener(e -> bot.getScriptHandler().getDebugSettingsListener().setDrawWeb(drawWeb.isSelected()));
 
+        BotConfig config = bot.configManager.getConfig(BotConfig.class);
+        if (config != null) {
+            drawMouse.setSelected(!config.debugDrawMouse());
+            drawMouse.doClick();
+            drawMouseTrail.setSelected(!config.debugDrawMouseTrail());
+            drawMouseTrail.doClick();
+            enableMouse.setSelected(!config.debugEnableMouse());
+            enableMouse.doClick();
+            drawBoundaries.setSelected(!config.debugDrawBoundaries());
+            drawBoundaries.doClick();
+            drawGround.setSelected(!config.debugDrawGround());
+            drawGround.doClick();
+            drawInventory.setSelected(!config.debugDrawInventory());
+            drawInventory.doClick();
+            drawNPCs.setSelected(!config.debugDrawNPCs());
+            drawNPCs.doClick();
+            drawObjects.setSelected(!config.debugDrawObjects());
+            drawObjects.doClick();
+            drawPlayers.setSelected(!config.debugDrawPlayers());
+            drawPlayers.doClick();
+            drawSettings.setSelected(!config.debugDrawSettings());
+            drawSettings.doClick();
+            drawWeb.setSelected(!config.debugDrawWeb());
+            drawWeb.doClick();
+        }
+
         drawBoundaries.setEnabled(false);
         drawGround.setEnabled(false);
         drawInventory.setEnabled(false);
@@ -57,5 +84,49 @@ public class DebugPanel extends JPanel {
         this.add(drawPlayers);
         this.add(drawSettings);
         this.add(drawWeb);
+    }
+
+    public void setDrawMouse(boolean drawMouse) {
+        bot.getScriptHandler().getDebugSettingsListener().setDrawMouse(drawMouse);
+    }
+
+    public void setDrawMouseTrail(boolean drawMouseTrail) {
+        bot.getScriptHandler().getDebugSettingsListener().setDrawMouseTrail(drawMouseTrail);
+    }
+
+    public void setEnableMouse(boolean enableMouse) {
+        bot.getScriptHandler().getDebugSettingsListener().setEnableMouse(enableMouse);
+    }
+
+    public void setDrawBoundaries(boolean drawBoundaries) {
+        bot.getScriptHandler().getDebugSettingsListener().setDrawBoundaries(drawBoundaries);
+    }
+
+    public void setDrawGround(boolean drawGround) {
+        bot.getScriptHandler().getDebugSettingsListener().setDrawGround(drawGround);
+    }
+
+    public void setDrawInventory(boolean drawInventory) {
+        bot.getScriptHandler().getDebugSettingsListener().setDrawInventory(drawInventory);
+    }
+
+    public void setDrawNPCs(boolean drawNPCs) {
+        bot.getScriptHandler().getDebugSettingsListener().setDrawNPCs(drawNPCs);
+    }
+
+    public void setDrawObjects(boolean drawObjects) {
+        bot.getScriptHandler().getDebugSettingsListener().setDrawObjects(drawObjects);
+    }
+
+    public void setDrawPlayers(boolean drawPlayers) {
+        bot.getScriptHandler().getDebugSettingsListener().setDrawPlayers(drawPlayers);
+    }
+
+    public void setDrawSettings(boolean drawSettings) {
+        bot.getScriptHandler().getDebugSettingsListener().setDrawSettings(drawSettings);
+    }
+
+    public void setDrawWeb(boolean drawWeb) {
+        bot.getScriptHandler().getDebugSettingsListener().setDrawWeb(drawWeb);
     }
 }

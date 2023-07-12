@@ -3,6 +3,8 @@ package net.runelite.client.plugins.bot;
 import com.google.inject.Provides;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.config.ConfigManager;
+import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.bot.base.DebugPanel;
@@ -46,6 +48,33 @@ public class BotPlugin extends Plugin {
     @Provides
     BotConfig provideConfig(ConfigManager configManager) {
         return (BotConfig)configManager.getConfig(BotConfig.class);
+    }
+    @Subscribe
+    public void onConfigChanged(ConfigChanged configChanged) {
+        if (configChanged.getGroup().equals("bot")) {
+            switch(configChanged.getKey()) {
+                case "debugDrawMouse" ->
+                    debugPanel.setDrawMouse(Boolean.getBoolean(configChanged.getNewValue()));
+                case "debugDrawMouseTrail" ->
+                    debugPanel.setDrawMouseTrail(Boolean.getBoolean(configChanged.getNewValue()));
+                case "debugEnableMouse" ->
+                    debugPanel.setEnableMouse(Boolean.getBoolean(configChanged.getNewValue()));
+                case "debugDrawBoundaries" ->
+                    debugPanel.setDrawBoundaries(Boolean.getBoolean(configChanged.getNewValue()));
+                case "debugDrawGround" ->
+                    debugPanel.setDrawGround(Boolean.getBoolean(configChanged.getNewValue()));
+                case "debugDrawInventory" ->
+                        debugPanel.setDrawInventory(Boolean.getBoolean(configChanged.getNewValue()));
+                case "debugDrawNpcs" ->
+                    debugPanel.setDrawNPCs(Boolean.getBoolean(configChanged.getNewValue()));
+                case "debugDrawObjects" ->
+                        debugPanel.setDrawObjects(Boolean.getBoolean(configChanged.getNewValue()));
+                case "debugDrawPlayers" ->
+                    debugPanel.setDrawPlayers(Boolean.getBoolean(configChanged.getNewValue()));
+                case "debugDrawWeb" ->
+                    debugPanel.setDrawWeb(Boolean.getBoolean(configChanged.getNewValue()));
+            }
+        }
     }
 
     @Override
