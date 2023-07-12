@@ -25,17 +25,17 @@ public class DebugPanel extends JPanel {
     }
 
     private void init() {
-        drawMouse.addActionListener(e -> bot.getScriptHandler().setDrawMouse(drawMouse.isSelected()));
-        drawMouseTrail.addActionListener(e -> bot.getScriptHandler().setDrawMouseTrail(drawMouseTrail.isSelected()));
-        enableMouse.addActionListener(e -> bot.getScriptHandler().setEnableMouse(enableMouse.isSelected()));
-        drawBoundaries.addActionListener(e -> bot.getScriptHandler().setDrawBoundaries(drawBoundaries.isSelected()));
-        drawGround.addActionListener(e -> bot.getScriptHandler().setDrawGround(drawGround.isSelected()));
-        drawInventory.addActionListener(e -> bot.getScriptHandler().setDrawInventory(drawInventory.isSelected()));
-        drawNPCs.addActionListener(e -> bot.getScriptHandler().setDrawNPCs(drawNPCs.isSelected()));
-        drawObjects.addActionListener(e -> bot.getScriptHandler().setDrawObjects(drawObjects.isSelected()));
-        drawPlayers.addActionListener(e -> bot.getScriptHandler().setDrawPlayers(drawPlayers.isSelected()));
-        drawSettings.addActionListener(e -> bot.getScriptHandler().setDrawSettings(drawSettings.isSelected()));
-        drawWeb.addActionListener(e -> bot.getScriptHandler().setDrawWeb(drawWeb.isSelected()));
+        drawMouse.addActionListener(e -> bot.getScriptHandler().getDebugSettingsListener().setDrawMouse(drawMouse.isSelected()));
+        drawMouseTrail.addActionListener(e -> bot.getScriptHandler().getDebugSettingsListener().setDrawMouseTrail(drawMouseTrail.isSelected()));
+        enableMouse.addActionListener(e -> bot.getScriptHandler().getDebugSettingsListener().setEnableMouse(enableMouse.isSelected()));
+        drawBoundaries.addActionListener(e -> bot.getScriptHandler().getDebugSettingsListener().setDrawBoundaries(drawBoundaries.isSelected()));
+        drawGround.addActionListener(e -> bot.getScriptHandler().getDebugSettingsListener().setDrawGround(drawGround.isSelected()));
+        drawInventory.addActionListener(e -> bot.getScriptHandler().getDebugSettingsListener().setDrawInventory(drawInventory.isSelected()));
+        drawNPCs.addActionListener(e -> bot.getScriptHandler().getDebugSettingsListener().setDrawNPCs(drawNPCs.isSelected()));
+        drawObjects.addActionListener(e -> bot.getScriptHandler().getDebugSettingsListener().setDrawObjects(drawObjects.isSelected()));
+        drawPlayers.addActionListener(e -> bot.getScriptHandler().getDebugSettingsListener().setDrawPlayers(drawPlayers.isSelected()));
+        drawSettings.addActionListener(e -> bot.getScriptHandler().getDebugSettingsListener().setDrawSettings(drawSettings.isSelected()));
+        drawWeb.addActionListener(e -> bot.getScriptHandler().getDebugSettingsListener().setDrawWeb(drawWeb.isSelected()));
 
         drawBoundaries.setEnabled(false);
         drawGround.setEnabled(false);
