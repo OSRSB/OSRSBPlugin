@@ -5,12 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.bot.base.DebugPanel;
 import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.NavigationButton;
 import net.runelite.rsb.botLauncher.BotLite;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -36,6 +38,8 @@ public class BotPlugin extends Plugin {
 
     private static AccountPanel accountPanel;
 
+    private static DebugPanel debugPanel;
+
     public BotPlugin() {
     }
 
@@ -52,8 +56,9 @@ public class BotPlugin extends Plugin {
 
         accountPanel = new AccountPanel(bot);
         scriptPanel = new ScriptPanel(bot);
+        debugPanel = new DebugPanel(bot);
 
-        panel.associateBot(accountPanel, scriptPanel);
+        panel.associateBot(accountPanel, scriptPanel, debugPanel);
 
         BufferedImage icon = imageToBufferedImage(BotPlugin.class.getResourceAsStream("rsb.png"));
 
@@ -99,5 +104,11 @@ public class BotPlugin extends Plugin {
         BotPlugin.accountPanel = accountPanel;
     }
 
+    public static DebugPanel getDebugPanel() {
+        return debugPanel;
+    }
 
+    public void setDebugPanel(DebugPanel debugPanel) {
+        BotPlugin.debugPanel = debugPanel;
+    }
 }
