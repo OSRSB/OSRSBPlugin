@@ -1,5 +1,6 @@
 package net.runelite.client.plugins.bot;
 
+import ch.qos.logback.classic.Level;
 import com.google.inject.Provides;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.config.ConfigManager;
@@ -53,26 +54,28 @@ public class BotPlugin extends Plugin {
     public void onConfigChanged(ConfigChanged configChanged) {
         if (configChanged.getGroup().equals("bot")) {
             switch(configChanged.getKey()) {
+                case "debugLogLevel" ->
+                    debugPanel.setLogLevel(Level.valueOf(configChanged.getNewValue()));
                 case "debugDrawMouse" ->
-                    debugPanel.setDrawMouse(Boolean.getBoolean(configChanged.getNewValue()));
+                    debugPanel.setDrawMouse(configChanged.getNewValue() == "true");
                 case "debugDrawMouseTrail" ->
-                    debugPanel.setDrawMouseTrail(Boolean.getBoolean(configChanged.getNewValue()));
+                    debugPanel.setDrawMouseTrail(configChanged.getNewValue() == "true");
                 case "debugEnableMouse" ->
-                    debugPanel.setEnableMouse(Boolean.getBoolean(configChanged.getNewValue()));
+                    debugPanel.setEnableMouse(configChanged.getNewValue() == "true");
                 case "debugDrawBoundaries" ->
-                    debugPanel.setDrawBoundaries(Boolean.getBoolean(configChanged.getNewValue()));
+                    debugPanel.setDrawBoundaries(configChanged.getNewValue() == "true");
                 case "debugDrawGround" ->
-                    debugPanel.setDrawGround(Boolean.getBoolean(configChanged.getNewValue()));
+                    debugPanel.setDrawGround(configChanged.getNewValue() == "true");
                 case "debugDrawInventory" ->
-                        debugPanel.setDrawInventory(Boolean.getBoolean(configChanged.getNewValue()));
+                        debugPanel.setDrawInventory(configChanged.getNewValue() == "true");
                 case "debugDrawNpcs" ->
-                    debugPanel.setDrawNPCs(Boolean.getBoolean(configChanged.getNewValue()));
+                    debugPanel.setDrawNPCs(configChanged.getNewValue() == "true");
                 case "debugDrawObjects" ->
-                        debugPanel.setDrawObjects(Boolean.getBoolean(configChanged.getNewValue()));
+                        debugPanel.setDrawObjects(configChanged.getNewValue() == "true");
                 case "debugDrawPlayers" ->
-                    debugPanel.setDrawPlayers(Boolean.getBoolean(configChanged.getNewValue()));
+                    debugPanel.setDrawPlayers(configChanged.getNewValue() == "true");
                 case "debugDrawWeb" ->
-                    debugPanel.setDrawWeb(Boolean.getBoolean(configChanged.getNewValue()));
+                    debugPanel.setDrawWeb(configChanged.getNewValue() == "true");
             }
         }
     }

@@ -1,12 +1,21 @@
 package net.runelite.client.plugins.bot.base;
 
+import ch.qos.logback.classic.Level;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.plugins.bot.BotConfig;
 import net.runelite.rsb.botLauncher.BotLite;
 
 import javax.swing.*;
+import java.awt.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class DebugPanel extends JPanel {
     BotLite bot;
+    String[] logLevels = {"DEBUG", "INFO", "WARN", "ERROR", "OFF"};
+
+    JComboBox<String> logLevel = new JComboBox<>(logLevels);
     JCheckBox drawMouse = new JCheckBox("Draw Mouse");
     JCheckBox drawMouseTrail = new JCheckBox("Draw Mouse Trail");
     JCheckBox enableMouse = new JCheckBox("Enable Mouse");
@@ -26,42 +35,45 @@ public class DebugPanel extends JPanel {
     }
 
     private void init() {
-        drawMouse.addActionListener(e -> bot.getScriptHandler().getDebugSettingsListener().setDrawMouse(drawMouse.isSelected()));
-        drawMouseTrail.addActionListener(e -> bot.getScriptHandler().getDebugSettingsListener().setDrawMouseTrail(drawMouseTrail.isSelected()));
-        enableMouse.addActionListener(e -> bot.getScriptHandler().getDebugSettingsListener().setEnableMouse(enableMouse.isSelected()));
-        drawBoundaries.addActionListener(e -> bot.getScriptHandler().getDebugSettingsListener().setDrawBoundaries(drawBoundaries.isSelected()));
-        drawGround.addActionListener(e -> bot.getScriptHandler().getDebugSettingsListener().setDrawGround(drawGround.isSelected()));
-        drawInventory.addActionListener(e -> bot.getScriptHandler().getDebugSettingsListener().setDrawInventory(drawInventory.isSelected()));
-        drawNPCs.addActionListener(e -> bot.getScriptHandler().getDebugSettingsListener().setDrawNPCs(drawNPCs.isSelected()));
-        drawObjects.addActionListener(e -> bot.getScriptHandler().getDebugSettingsListener().setDrawObjects(drawObjects.isSelected()));
-        drawPlayers.addActionListener(e -> bot.getScriptHandler().getDebugSettingsListener().setDrawPlayers(drawPlayers.isSelected()));
-        drawSettings.addActionListener(e -> bot.getScriptHandler().getDebugSettingsListener().setDrawSettings(drawSettings.isSelected()));
-        drawWeb.addActionListener(e -> bot.getScriptHandler().getDebugSettingsListener().setDrawWeb(drawWeb.isSelected()));
+        logLevel.addActionListener(e -> bot.configManager.setConfiguration("bot", "debugLogLevel", Level.valueOf(logLevel.getSelectedItem().toString())));
+        drawMouse.addActionListener(e -> bot.configManager.setConfiguration("bot", "debugDrawMouse", drawMouse.isSelected()));
+        drawMouseTrail.addActionListener(e -> bot.configManager.setConfiguration("bot", "debugDrawMouseTrail", drawMouseTrail.isSelected()));
+        enableMouse.addActionListener(e -> bot.configManager.setConfiguration("bot", "debugEnableMouse", enableMouse.isSelected()));
+        drawBoundaries.addActionListener(e -> bot.configManager.setConfiguration("bot", "debugDrawBoundaries", drawBoundaries.isSelected()));
+        drawGround.addActionListener(e -> bot.configManager.setConfiguration("bot", "debugDrawGround", drawGround.isSelected()));
+        drawInventory.addActionListener(e -> bot.configManager.setConfiguration("bot", "debugDrawInventory", drawInventory.isSelected()));
+        drawNPCs.addActionListener(e -> bot.configManager.setConfiguration("bot", "debugDrawNPCs", drawNPCs.isSelected()));
+        drawObjects.addActionListener(e -> bot.configManager.setConfiguration("bot", "debugDrawObjects", drawObjects.isSelected()));
+        drawPlayers.addActionListener(e -> bot.configManager.setConfiguration("bot", "debugDrawPlayers", drawPlayers.isSelected()));
+        drawSettings.addActionListener(e -> bot.configManager.setConfiguration("bot", "debugDrawSettings", drawSettings.isSelected()));
+        drawWeb.addActionListener(e -> bot.configManager.setConfiguration("bot", "debugDrawWeb", drawWeb.isSelected()));
 
         BotConfig config = bot.configManager.getConfig(BotConfig.class);
         if (config != null) {
-            drawMouse.setSelected(!config.debugDrawMouse());
-            drawMouse.doClick();
-            drawMouseTrail.setSelected(!config.debugDrawMouseTrail());
-            drawMouseTrail.doClick();
-            enableMouse.setSelected(!config.debugEnableMouse());
-            enableMouse.doClick();
-            drawBoundaries.setSelected(!config.debugDrawBoundaries());
-            drawBoundaries.doClick();
-            drawGround.setSelected(!config.debugDrawGround());
-            drawGround.doClick();
-            drawInventory.setSelected(!config.debugDrawInventory());
-            drawInventory.doClick();
-            drawNPCs.setSelected(!config.debugDrawNPCs());
-            drawNPCs.doClick();
-            drawObjects.setSelected(!config.debugDrawObjects());
-            drawObjects.doClick();
-            drawPlayers.setSelected(!config.debugDrawPlayers());
-            drawPlayers.doClick();
-            drawSettings.setSelected(!config.debugDrawSettings());
-            drawSettings.doClick();
-            drawWeb.setSelected(!config.debugDrawWeb());
-            drawWeb.doClick();
+            logLevel.setSelectedItem(config.debugLogLevel());
+            setLogLevel(Level.valueOf(config.debugLogLevel()));
+            drawMouse.setSelected(config.debugDrawMouse());
+            setDrawMouse(config.debugDrawMouse());
+            drawMouseTrail.setSelected(config.debugDrawMouseTrail());
+            setDrawMouseTrail(config.debugDrawMouseTrail());
+            enableMouse.setSelected(config.debugEnableMouse());
+            setEnableMouse(config.debugEnableMouse());
+            drawBoundaries.setSelected(config.debugDrawBoundaries());
+            setDrawBoundaries(config.debugDrawBoundaries());
+            drawGround.setSelected(config.debugDrawGround());
+            setDrawGround(config.debugDrawGround());
+            drawInventory.setSelected(config.debugDrawInventory());
+            setDrawInventory(config.debugDrawInventory());
+            drawNPCs.setSelected(config.debugDrawNPCs());
+            setDrawNPCs(config.debugDrawNPCs());
+            drawObjects.setSelected(config.debugDrawObjects());
+            setDrawObjects(config.debugDrawObjects());
+            drawPlayers.setSelected(config.debugDrawPlayers());
+            setDrawPlayers(config.debugDrawPlayers());
+            drawSettings.setSelected(config.debugDrawSettings());
+            setDrawSettings(config.debugDrawSettings());
+            drawWeb.setSelected(config.debugDrawWeb());
+            setDrawWeb(config.debugDrawWeb());
         }
 
         drawBoundaries.setEnabled(false);
@@ -84,6 +96,11 @@ public class DebugPanel extends JPanel {
         this.add(drawPlayers);
         this.add(drawSettings);
         this.add(drawWeb);
+        this.add(logLevel);
+    }
+
+    public void setLogLevel(Level level) {
+        bot.getScriptHandler().getDebugSettingsListener().setLogLevel(level);
     }
 
     public void setDrawMouse(boolean drawMouse) {

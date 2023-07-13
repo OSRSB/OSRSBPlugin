@@ -1,5 +1,6 @@
 package net.runelite.client.plugins.bot;
 
+import ch.qos.logback.classic.Level;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
@@ -17,11 +18,22 @@ public interface BotConfig extends Config {
     }
 
     @ConfigItem(
+            keyName = "debugLogLevel",
+            name = "Debug Log Level",
+            description = "Set the log level of bot",
+            hidden = true,
+            position = 1
+    )
+    default String debugLogLevel() {
+        return "INFO";
+    }
+
+    @ConfigItem(
             keyName = "debugDrawMouse",
             name = "Draw Mouse",
             description = "Draw the mouse on script start",
             hidden = true,
-            position = 1
+            position = 2
     )
     default boolean debugDrawMouse() {
         return false;
@@ -32,7 +44,7 @@ public interface BotConfig extends Config {
             name = "Draw Mouse Trail",
             description = "Draw the mouse trail on script start",
             hidden = true,
-            position = 2
+            position = 3
     )
     default boolean debugDrawMouseTrail() {
         return false;
@@ -43,7 +55,7 @@ public interface BotConfig extends Config {
             name = "Enable Mouse",
             description = "Enable the mouse on script start",
             hidden = true,
-            position = 3
+            position = 4
     )
     default boolean debugEnableMouse() {
         return true;
@@ -54,7 +66,7 @@ public interface BotConfig extends Config {
             name = "Draw Boundaries",
             description = "Draw boundaries",
             hidden = true,
-            position = 4
+            position = 5
     )
     default boolean debugDrawBoundaries() {
         return false;
@@ -65,7 +77,7 @@ public interface BotConfig extends Config {
             name = "Draw Ground",
             description = "Draw ground",
             hidden = true,
-            position = 5
+            position = 6
     )
     default boolean debugDrawGround() {
         return false;
@@ -76,7 +88,7 @@ public interface BotConfig extends Config {
             name = "Draw Inventory",
             description = "Draw inventory",
             hidden = true,
-            position = 6
+            position = 7
     )
     default boolean debugDrawInventory() {
         return false;
@@ -87,7 +99,7 @@ public interface BotConfig extends Config {
             name = "Draw NPCs",
             description = "Draw NPCs",
             hidden = true,
-            position = 7
+            position = 8
     )
     default boolean debugDrawNPCs() {
         return false;
@@ -98,7 +110,7 @@ public interface BotConfig extends Config {
             name = "Draw Objects",
             description = "Draw objects",
             hidden = true,
-            position = 8
+            position = 9
     )
     default boolean debugDrawObjects() {
         return false;
@@ -109,7 +121,7 @@ public interface BotConfig extends Config {
             name = "Draw Players",
             description = "Draw players",
             hidden = true,
-            position = 9
+            position = 10
     )
     default boolean debugDrawPlayers() {
         return false;
@@ -120,7 +132,7 @@ public interface BotConfig extends Config {
             name = "Draw Settings",
             description = "Draw settings",
             hidden = true,
-            position = 10
+            position = 11
     )
     default boolean debugDrawSettings() {
         return false;
@@ -131,9 +143,10 @@ public interface BotConfig extends Config {
             name = "Draw Web",
             description = "Draw web",
             hidden = true,
-            position = 11
+            position = 12
     )
     default boolean debugDrawWeb() {
         return false;
     }
+
 }
