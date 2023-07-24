@@ -1,16 +1,21 @@
 package net.runelite.client.plugins.bot;
 
+import ch.qos.logback.classic.Level;
 import com.google.inject.Provides;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.config.ConfigManager;
+import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.bot.base.DebugPanel;
 import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.NavigationButton;
 import net.runelite.rsb.botLauncher.BotLite;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -36,12 +41,43 @@ public class BotPlugin extends Plugin {
 
     private static AccountPanel accountPanel;
 
+    private static DebugPanel debugPanel;
+
     public BotPlugin() {
     }
 
     @Provides
     BotConfig provideConfig(ConfigManager configManager) {
         return (BotConfig)configManager.getConfig(BotConfig.class);
+    }
+    @Subscribe
+    public void onConfigChanged(ConfigChanged configChanged) {
+        if (configChanged.getGroup().equals("bot")) {
+            switch(configChanged.getKey()) {
+                case "debugLogLevel" ->
+                    debugPanel.setLogLevel(Level.valueOf(configChanged.getNewValue()));
+                case "debugDrawMouse" ->
+                    debugPanel.setDrawMouse(configChanged.getNewValue() == "true");
+                case "debugDrawMouseTrail" ->
+                    debugPanel.setDrawMouseTrail(configChanged.getNewValue() == "true");
+                case "debugEnableMouse" ->
+                    debugPanel.setEnableMouse(configChanged.getNewValue() == "true");
+                case "debugDrawBoundaries" ->
+                    debugPanel.setDrawBoundaries(configChanged.getNewValue() == "true");
+                case "debugDrawGround" ->
+                    debugPanel.setDrawGround(configChanged.getNewValue() == "true");
+                case "debugDrawInventory" ->
+                        debugPanel.setDrawInventory(configChanged.getNewValue() == "true");
+                case "debugDrawNpcs" ->
+                    debugPanel.setDrawNPCs(configChanged.getNewValue() == "true");
+                case "debugDrawObjects" ->
+                        debugPanel.setDrawObjects(configChanged.getNewValue() == "true");
+                case "debugDrawPlayers" ->
+                    debugPanel.setDrawPlayers(configChanged.getNewValue() == "true");
+                case "debugDrawWeb" ->
+                    debugPanel.setDrawWeb(configChanged.getNewValue() == "true");
+            }
+        }
     }
 
     @Override
@@ -52,8 +88,9 @@ public class BotPlugin extends Plugin {
 
         accountPanel = new AccountPanel(bot);
         scriptPanel = new ScriptPanel(bot);
+        debugPanel = new DebugPanel(bot);
 
-        panel.associateBot(accountPanel, scriptPanel);
+        panel.associateBot(accountPanel, scriptPanel, debugPanel);
 
         BufferedImage icon = imageToBufferedImage(BotPlugin.class.getResourceAsStream("rsb.png"));
 
@@ -99,5 +136,11 @@ public class BotPlugin extends Plugin {
         BotPlugin.accountPanel = accountPanel;
     }
 
+    public static DebugPanel getDebugPanel() {
+        return debugPanel;
+    }
 
+    public void setDebugPanel(DebugPanel debugPanel) {
+        BotPlugin.debugPanel = debugPanel;
+    }
 }

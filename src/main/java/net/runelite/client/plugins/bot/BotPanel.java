@@ -61,13 +61,12 @@ class BotPanel extends PluginPanel
 	 * @param accountPanel	The account panel to associate with the bot plugin panel.
 	 * @param scriptPanel	The script panel to associate with the bot plugin panel.
 	 */
-	protected void associateBot(AccountPanel accountPanel, ScriptPanel scriptPanel) {
+	protected void associateBot(AccountPanel accountPanel, ScriptPanel scriptPanel, DebugPanel debugPanel) {
 
 
 		Accordion accordion = new Accordion();
 
 		JPanel generalPanel = GeneralPanel.getInstance();
-		JPanel debugPanel = new DebugPanel();
 		JPanel botViewPanel = new BotViewPanel();
 
 		accordion.addBar("General", generalPanel);
